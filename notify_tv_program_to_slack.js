@@ -1,5 +1,3 @@
-const { title } = require('process');
-
 const webhook_url = 'https://hooks.slack.com/hogehoge';
 
 const keywords = [
