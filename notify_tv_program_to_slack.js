@@ -19,7 +19,7 @@ async function notify_tv_program() {
     // console.log(JSON.stringify(items, null, 2));
     const json = await convert(items);
     // console.log(JSON.stringify(json, null, 2));
-    await notify(webhook_url, json);
+    await notifyPromise(webhook_url, json);
 }
 
 async function search(keywords) {
@@ -107,19 +107,24 @@ async function convert(items) {
     }
 }
 
-async function notify(webhook_url, json) {
-    const request = require('request');
-    const options = {
-        uri: webhook_url,
-        headers: {
-            "Content-type": "application/json",
-        },
-        json,    
-    };
-    request.post(options, function(error, response, body){
-        if (error || response.statusCode !== 200) {
-            console.log(`error: ${response.statusCode}, ${response.body}`);
-        }
+
+function notifyPromise(webhook_url, json) {
+    return new Promise((resolve, reject) => {
+        const request = require('request');
+        const options = {
+            uri: webhook_url,
+            headers: {
+                "Content-type": "application/json",
+            },
+            json,    
+        };
+        request.post(options, function(error, response, body){
+            if (error || response.statusCode !== 200) {
+                reject(`error: ${response.statusCode}, ${response.body}`);
+            } else {
+                resolve();
+            }
+        });
     });
 }
 
